@@ -1,0 +1,2 @@
+rootProject.name = 'spring-redis-session-sample'
+include 'webapp-java-sample'

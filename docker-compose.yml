@@ -1,0 +1,49 @@
+version: '3'
+services:
+  
+  redis1:
+    build:
+      context: redis
+      dockerfile: Dockerfile
+    container_name: redis1
+    hostname: redis1
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./redis/data:/data"
+      - "./redis/files:/etc/redis"
+    command: redis-server /etc/redis/redis.conf
+    
+  ap1:
+    build:
+      context: webapp-java-sample
+      dockerfile: Dockerfile
+    container_name: ap-sample1
+    hostname: ap1
+    depends_on:
+      - redis1
+    ports:
+      - "8001:38080"
+
+  ap2:
+    build:
+      context: webapp-java-sample
+      dockerfile: Dockerfile
+    container_name: ap-sample2
+    hostname: ap2
+    depends_on:
+      - redis1
+    ports:
+      - "8002:38080"
+
+  web1:
+    image: nginx:1.25.3-alpine
+    container_name: lb-web
+    hostname: web1
+    depends_on:
+      - ap1
+      - ap2
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
