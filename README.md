@@ -13,7 +13,7 @@ web1(nginx)
 ./gradlew webapp-java-sample:build
 
 # コンテナビルド
-docker compose up
+docker compose up --build
 ```
 
 ## アクセス
